@@ -12,6 +12,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/jasonwvh/simple_iam/handlers"
 	"github.com/jasonwvh/simple_iam/handlers/auth"
+	"github.com/jasonwvh/simple_iam/handlers/users"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -34,6 +35,10 @@ func main() {
 	env := &handlers.Env{DB: db}
 
 	r := mux.NewRouter()
+	usersRouter := r.PathPrefix("/users").Subrouter()
+	usersRouter.HandleFunc("/", users.CreateUsers(env)).Methods("POST")
+	usersRouter.HandleFunc("/{username}", users.GetUser(env)).Methods("GET")
+
 	authRouter := r.PathPrefix("/").Subrouter()
 	authRouter.HandleFunc("/authenticate", auth.AuthenticationHandler(env)).Methods("POST")
 	authRouter.HandleFunc("/authorize", auth.AuthorizationHandler(env)).Methods("POST")
