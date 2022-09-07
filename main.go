@@ -27,11 +27,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// _, err = db.Exec("INSERT INTO users(username, password, created) values('jasonwvh', 'pass', '2012-12-09')")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
 	env := &handlers.Env{DB: db}
 
 	r := mux.NewRouter()
@@ -40,8 +35,7 @@ func main() {
 	usersRouter.HandleFunc("/{username}", users.GetUser(env)).Methods("GET")
 
 	authRouter := r.PathPrefix("/").Subrouter()
-	authRouter.HandleFunc("/authenticate", auth.AuthenticationHandler(env)).Methods("POST")
-	authRouter.HandleFunc("/authorize", auth.AuthorizationHandler(env)).Methods("POST")
+	authRouter.HandleFunc("/login", auth.LoginHandler(env)).Methods("POST")
 
 	// create a new server
 	s := http.Server{

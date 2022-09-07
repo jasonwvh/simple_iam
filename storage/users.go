@@ -34,7 +34,7 @@ func GetUser(db *sql.DB, username string) (*User, error) {
 
 	rows.Close()
 
-	return &users[0], err
+	return &users[0], nil
 }
 
 func GetUsers(db *sql.DB) ([]User, error) {
@@ -56,7 +56,7 @@ func GetUsers(db *sql.DB) ([]User, error) {
 
 	rows.Close()
 
-	return users, err
+	return users, nil
 }
 
 func CreateUser(db *sql.DB, user *User) error {
@@ -66,8 +66,10 @@ func CreateUser(db *sql.DB, user *User) error {
 	if err != nil {
 		return err
 	}
+	ids, _ := res.LastInsertId()
+	rws, _ := res.RowsAffected()
 
-	log.Printf("CreateUser result: %v", res)
+	log.Printf("CreateUser result: ids: %d rows: %d", ids, rws)
 
-	return err
+	return nil
 }
