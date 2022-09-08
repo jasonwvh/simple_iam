@@ -22,7 +22,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	_, err = db.Exec("CREATE TABLE IF NOT EXISTS `users` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT, `username` VARCHAR(255) NOT NULL, `password` VARCHAR(255) NOT NULL, `created` DATE NULL)")
+	_, err = db.Exec("CREATE TABLE IF NOT EXISTS `users` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT, `username` VARCHAR(255) NOT NULL, `password` VARCHAR(255) NOT NULL, `salt` VARCHAR(255) NOT NULL, `created` DATE NULL)")
 	if err != nil {
 		log.Fatal(err)
 	}

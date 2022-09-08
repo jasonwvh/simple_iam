@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"crypto/sha512"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -87,9 +89,16 @@ func Authenticate(env *handlers.Env, username string, password string) (bool, er
 		return false, err
 	}
 
+	salt := dbUser.Salt
+	saltPass := password + salt
+
+	hasher := sha512.New512_256()
+	hasher.Write([]byte(saltPass))
+	hashedPass := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+
 	log.Printf("found user: %v", dbUser)
-	if dbUser.Password != password {
-		log.Printf("password mismatch %s and %s", dbUser.Password, password)
+	if hashedPass != dbUser.Password {
+		log.Printf("password mismatch %s and %s", hashedPass, dbUser.Password)
 		return false, err
 	}
 
